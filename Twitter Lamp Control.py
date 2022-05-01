@@ -1,4 +1,4 @@
-# If @lampy_lamp receives a tweet - flicker white
+# If @mr_lampy_lamp receives a tweet - flicker white
 # if tweet include red/green/blue, flicker that colour
 # If @lamp_lamp tweets, flicker white
 # If tweet contains on/off, turn lamp on/off
