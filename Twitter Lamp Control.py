@@ -1,22 +1,27 @@
-# If @mr_lampy_lamp receives a tweet - flicker white
-# if tweet include red/green/blue, flicker that colour
-# If @lamp_lamp tweets, flicker white
-# If tweet contains on/off, turn lamp on/off
-# Tweet out the name, contents, and action taken, when a command tweet is received.
+    # TO IMPLEMENT?:
+# 1) Tweet out the sender's twitter handle, and action taken, when a command tweet is received.
+
+# 2) Add time+date AND colour of each tweet to a dictionary
+    # to record + replay a series of flashes!!!
+
+# 3) Post everywhere! Molten twitter, UK Melee discord,
+
 
 # TWEEPY METHODS:
 # https://docs.tweepy.org/en/stable/client.html
+    # ^ methods
 # https://docs.tweepy.org/en/stable/api.html
 # https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
 
-import configfile   # Lets you look at other files to...
+import configfile
 import tweepy
 import yeelight
 import time
+import re
 
-bulb = yeelight.Bulb(configfile.bulb_IP)
+bulb = yeelight.Bulb(configfile.bulb_IP, effect='smooth',duration=3000)
 bulb.turn_on()
-bulb.set_rgb(255,0,0) # red = default
+bulb.set_brightness(30)
 
 my_bearer_token = configfile.my_bearer_token
 consumer_key=configfile.API_key
@@ -63,8 +68,43 @@ def check_own_new_tweet():  # Activates every time Lampy tweets
         bulb.set_rgb(255,0,0) # ...then red 3s later
     else: bulb.set_rgb(255,0,0) # Red is the default colour
 
-while True: 
-    check_own_new_tweet()
+#while True: 
+#    check_own_new_tweet()
+
+
+def check_mentions():
+    x=api.mentions_timeline()
+        # Make it so that a list of mentions is collected,
+        # so no tweet gets missed.
+        # Tweet out a thank you, pulling handle from JSON, and explaining what was done.
+    most_recent_mention=x[0]['text']
+    most_recent_mention_date=x[0]['created_at']
+    time.sleep(12)
+    while True:
+        print(most_recent_mention, most_recent_mention_date)
+        time.sleep(14)
+        x=api.mentions_timeline(count=1)
+        bulb.turn_on()
+        if most_recent_mention != x[0]['text'] and most_recent_mention_date != x[0]['created_at']:
+            bulb.set_brightness(80)
+            if 'rgb' in x[0]['text'].lower():
+                pass
+                #use a regex and read that from the tweet!!
+            if 'red' in x[0]['text'].lower():
+                bulb.set_rgb(255,0,0)
+            elif 'blue' in x[0]['text'].lower():
+                bulb.set_rgb(0,0,255)
+            elif 'green' in x[0]['text'].lower():
+                bulb.set_rgb(0,255,0)
+            time.sleep(12)
+            bulb.set_brightness(30)
+            bulb.set_rgb(255,255,255)
+        x=api.mentions_timeline(count=1) 
+        most_recent_mention=x[0]['text']
+        most_recent_mention_date=x[0]['created_at']
+        
+
+check_mentions()
 
 def post_to_self():    
     client = tweepy.Client(consumer_key=API_key,
