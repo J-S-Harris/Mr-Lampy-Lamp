@@ -4,7 +4,16 @@
 # 2) Add time+date AND colour of each tweet to a dictionary
     # to record + replay a series of flashes!!!
 
-# 3) Post everywhere! Molten twitter, UK Melee discord,
+# 3) Post everywhere! Molten twitter, UK Melee discord, etc
+
+# 4) allow it to check for multiple colours, (incl. rgb), and cycle through all of them!
+    # total ~16 seconds, i.e: 16/len(rgb+if_r+if_g+if_b)
+
+# 5) Make it parse RGB with regex!
+
+# 6) Update website with a few words per capability
+
+# 7) Why rate limit????
 
 
 # TWEEPY METHODS:
@@ -18,6 +27,8 @@ import tweepy
 import yeelight
 import time
 import re
+
+all_mentions =[]
 
 bulb = yeelight.Bulb(configfile.bulb_IP, effect='smooth',duration=3000)
 bulb.turn_on()
@@ -79,27 +90,34 @@ def check_mentions():
         # Tweet out a thank you, pulling handle from JSON, and explaining what was done.
     most_recent_mention=x[0]['text']
     most_recent_mention_date=x[0]['created_at']
-    time.sleep(12)
+    time.sleep(15)
     while True:
         print(most_recent_mention, most_recent_mention_date)
-        time.sleep(14)
+        time.sleep(15)
         x=api.mentions_timeline(count=1)
+        global all_mentions
+        if x[0]['text'] not in all_mentions:
+            all_mentions.append(x[0]['text'])
         bulb.turn_on()
         if most_recent_mention != x[0]['text'] and most_recent_mention_date != x[0]['created_at']:
             bulb.set_brightness(80)
+            colours_list=[]
             if 'rgb' in x[0]['text'].lower():
                 pass
                 #use a regex and read that from the tweet!!
             if 'red' in x[0]['text'].lower():
-                bulb.set_rgb(255,0,0)
-            elif 'blue' in x[0]['text'].lower():
+                bulb.set_rgb(255,0,0)   # Change each of these lines to add respective colour to colours_list...
+            if 'blue' in x[0]['text'].lower():
                 bulb.set_rgb(0,0,255)
-            elif 'green' in x[0]['text'].lower():
+            if 'green' in x[0]['text'].lower():
                 bulb.set_rgb(0,255,0)
-            time.sleep(12)
+            # ... then strobe them all for 16/colours seconds.
+            time.sleep(12)  # Get rid of this?
             bulb.set_brightness(30)
             bulb.set_rgb(255,255,255)
-        x=api.mentions_timeline(count=1) 
+            # Make it check here if there are any tweets in 'all_mentions' that haven't been flashed,
+                # ^ and ONLY THEN get more (reduce API calls)
+        x=api.mentions_timeline(count=1)
         most_recent_mention=x[0]['text']
         most_recent_mention_date=x[0]['created_at']
         
