@@ -19,6 +19,17 @@
 
 # 9) Why does the Bulb API max out after only a few colours? How does it work/what is the rate limit????
 
+# 10) Add new colours (orange, purple, pink, yellow)
+    # DONE
+
+# 11) Update website with details of project; add github link to website
+    # 11b) add version control/github knowledge to cv; add
+
+# 12) If given a non-colour string, make it flash white rather than skip it
+
+# 13 !!!! ADD feedback for tweeters - tweet them back with action taken !!!!
+        # OR automatically record flashes an upload??? Put vid in tweet?
+
 
 # TWEEPY METHODS:
 # https://docs.tweepy.org/en/stable/client.html
@@ -101,13 +112,24 @@ def check_mentions():
                         colours_list.append('blue')
                     elif z == 'green':
                         colours_list.append('green')
+                    elif z == 'white':
+                        colours_list.append('white')
+                    elif z == 'purple':
+                        colours_list.append('purple')
+                    elif z == 'orange':
+                        colours_list.append('orange')
+                    elif z == 'pink':
+                        colours_list.append('pink')
+                    elif z == 'yellow':
+                        colours_list.append('yellow')
+                    
                     #elif 'rgb' in z:
                         # regex to find colours directly between 'rgb(' and ')'
                 print(colours_list)
                 if len(colours_list) == 0:
                     colours_list.append('white')
                 global colour_duration
-                colour_duration = 16/int(len(colours_list))
+                colour_duration = 20/int(len(colours_list))
                 print('colour duration assigned:',colour_duration)
 
                 x=0
@@ -115,7 +137,7 @@ def check_mentions():
                     if x<10:
                         x+=1
                         print(x)
-                        if z == 'red':
+                        if z == 'red':  # Make this a dictionary of colour/rgb key/value pairs
                             bulb.set_rgb(255,0,0)   # WHY DOES API MAX OUT? Increase the colour_duration integer??? [what is the limit? not 60a minute???
                             time.sleep(colour_duration)
                         elif z == 'blue':
@@ -127,11 +149,23 @@ def check_mentions():
                         elif z == 'white':
                             bulb.set_rgb(200,200,200)
                             time.sleep(colour_duration)
+                        elif z == 'purple':
+                            bulb.set_rgb(128,0,190)
+                            time.sleep(colour_duration)
+                        elif z == 'orange':
+                            bulb.set_rgb(255,172,28)
+                            time.sleep(colour_duration)
+                        elif z == 'pink':   # HOW MAKE PURPLE AND PINK LESS SIMILAR?
+                            bulb.set_rgb(255,0,255)
+                            time.sleep(colour_duration)
+                        elif z == 'yellow':
+                            bulb.set_rgb(255,234,0)
+                            time.sleep(colour_duration)
                         #elif ',' in z:
                             # regex to see if it is (num,num,num)                            
                             #bulb.set_rgb(z)
                             #time.sleep(colour_duration)
-                    print('end of colours flashed?')
+                print('end of colours flashed?')
         
             bulb.set_brightness(30) # Resting brightness
             bulb.set_rgb(0,100,100)
@@ -139,7 +173,7 @@ def check_mentions():
         print('\nT E S T: end of function\n\n',all_senders,'\n\n',all_dates,'\n\n',all_mentions,'\n\n') # TEST SCRIPT
         
         
-        time.sleep(20-(2*len(colours_list))) # Should always lead to 26s cycles (16 lit up)
+        time.sleep(30-(2*len(colours_list))) # Should always lead to 26s cycles (16 lit up)
 
 if __name__ == '__main__':
     check_mentions()
