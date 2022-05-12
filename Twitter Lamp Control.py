@@ -4,8 +4,6 @@
 # 2) Add time+date AND colour of each tweet to a dictionary
     # to record + replay a series of flashes!!!
 
-# 3) Post everywhere! Molten twitter, UK Melee discord, etc
-
 # 5) Make it parse RGB with regex!
 
 # 6) Update website with a few words per 
